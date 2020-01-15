@@ -1,0 +1,32 @@
+---
+- name: Create a virtual machine from template
+  vmware_guest:
+    hostname: "{{ vcenter_host }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    validate_certs: no
+    datacenter: "{{ datacenter }}"
+    folder: "{{ esxi_folder }}"
+    name: "{{ host_name }}"
+    template: "{{ os_template }}"
+    state: poweredon
+    esxi_hostname: "{{ esxi_host }}"
+    disk:
+    - size_gb: 50
+      type: thin
+      datastore: "{{ root_disk_datastore }}"
+    hardware:
+      memory_gb: "{{ memory_size }}"
+      memory_reservation_lock: true
+      num_cpus: "{{ cpu_number }}"
+      num_cpu_cores_per_socket: "{{ cpu_number }}"
+      scsi: paravirtual
+    networks:
+    - name: "{{ network_seg }}"
+      ip: "{{ host_ip }}"
+      netmask: "{{ subnetmask }}"
+      gateway: "{{ default_gateway }}"
+      device_type: vmxnet3
+    wait_for_ip_address: yes
+  delegate_to: localhost
+  register: deploy
