@@ -1,4 +1,7 @@
 ---
+- name: VM exists check
+  import_tasks: vm_exists_check.yml
+
 - name: Create a virtual machine from template
   vmware_guest:
     hostname: "{{ vcenter_host }}"
@@ -12,7 +15,7 @@
     state: poweredon
     esxi_hostname: "{{ esxi_host }}"
     disk:
-    - size_gb: 50
+    - size_gb: "{{ root_disk_size }}"
       type: thin
       datastore: "{{ root_disk_datastore }}"
     hardware:
@@ -26,7 +29,7 @@
       ip: "{{ host_ip }}"
       netmask: "{{ subnetmask }}"
       gateway: "{{ default_gateway }}"
-      device_type: vmxnet3
     wait_for_ip_address: yes
   delegate_to: localhost
   register: deploy
+
