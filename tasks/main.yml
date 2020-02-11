@@ -31,5 +31,40 @@
       gateway: "{{ default_gateway }}"
     wait_for_ip_address: yes
   delegate_to: localhost
-  register: deploy
+  register: deploy_vm
 
+- debug: var=deploy_vm
+
+- name: connect to network
+  vmware_guest_network:
+    hostname: "{{ vcenter_host }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    validate_certs: no
+    datacenter: "{{ datacenter }}"
+    name: "{{ host_name }}"
+    networks:
+      - state: present
+        label: "{{ deploy_vm.instance.hw_eth0.label }}"
+        start_connected: true
+  delegate_to: localhost
+
+- name: stop VM
+  vmware_guest_powerstate:
+    hostname: "{{ vcenter_host }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    validate_certs: no
+    name: "{{ host_name }}"
+    state: powered-off
+  delegate_to: localhost
+
+- name: start VM
+  vmware_guest_powerstate:
+    hostname: "{{ vcenter_host }}"
+    username: "{{ vcenter_user }}"
+    password: "{{ vcenter_pass }}"
+    validate_certs: no
+    name: "{{ host_name }}"
+    state: powered-on
+  delegate_to: localhost
