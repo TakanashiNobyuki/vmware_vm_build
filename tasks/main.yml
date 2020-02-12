@@ -68,3 +68,9 @@
     name: "{{ host_name }}"
     state: powered-on
   delegate_to: localhost
+
+- name: Add Disk
+  include_tasks: disk_add.yml
+  with_indexed_items: "{{ vmware_disk_params }}"
+  loop_control:
+    loop_var: disk_param
