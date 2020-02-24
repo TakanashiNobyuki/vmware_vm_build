@@ -74,3 +74,18 @@
   with_indexed_items: "{{ vmware_disk_params }}"
   loop_control:
     loop_var: disk_param
+
+- name: Wait until you can ssh for Linux
+  wait_for:
+    host: "{{ host_ip }}"
+    port: 22
+    delay: 30
+    search_regex: OpenSSH
+  when: server_os_family == "Linux"
+  connection: local
+  become: false
+
+- name: Wait until you can WinRM for Windows
+  wait_for_connection:
+    timeout: 300
+  when: server_os_family == "Windows"
