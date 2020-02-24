@@ -71,9 +71,10 @@
 
 - name: Add Disk
   include_tasks: disk_add.yml
-  with_indexed_items: "{{ vmware_disk_params }}"
+  with_indexed_items: "{{ disk_params }}"
   loop_control:
     loop_var: disk_param
+  when: disk_params is defined
 
 - name: Wait until you can ssh for Linux
   wait_for:
