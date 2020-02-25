@@ -13,7 +13,7 @@
     is_hostname: false
 
 - name: retrieve ip
-  shell: ping "{{ host_ip }" -c 10
+  shell: ping "{{ host_ip }}" -c 10
   ignore_errors: true
   register: ping_result
   delegate_to: localhost
