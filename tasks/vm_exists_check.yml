@@ -10,21 +10,17 @@
   register: vminfo
 
 - set_fact:
-    is_ip: false
     is_hostname: false
 
 - name: retrieve ip
-  set_fact:
-    is_ip: true
-  with_items:
-    - "{{ vminfo.virtual_machines | json_query(query) }}"
-  vars:
-    query: "[?ip_address=='{{ host_ip }}']"
+  shell: ping "{{ host_ip }" -c 10
+  ignore_errors: true
+  register: ping_result
+  delegate_to: localhost
 
 - name: IP address exist check
   fail: msg="IP address:{{ host_ip }} is exit!!"
-  when:
-    - is_ip == true
+  when: ping_result.rc == 0
 
 - name: retrieve hostname
   set_fact:
