@@ -19,7 +19,7 @@
       type: thin
       datastore: "{{ root_disk_datastore }}"
     hardware:
-      memory_gb: "{{ memory_size }}"
+      memory_mb: "{{ memory_size }}"
       memory_reservation_lock: true
       num_cpus: "{{ cpu_number }}"
       num_cpu_cores_per_socket: "{{ cpu_number }}"
